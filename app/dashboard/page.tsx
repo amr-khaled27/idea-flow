@@ -14,11 +14,13 @@ import { handleSaveIdeaToFirestore } from "../utils/firestore";
 import { useAuth } from "../providers/AuthProvider";
 import { User } from "firebase/auth";
 import MyAccordionItem from "@/components/MyAccordionItem";
+import { BeatLoader } from "react-spinners";
 
 export default function Dashboard() {
   const [prompt, setPrompt] = useState("");
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
+  const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
   const auth = useAuth();
 
@@ -26,11 +28,13 @@ export default function Dashboard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsGenerating(true);
     console.log("Generating ideas for prompt:", prompt);
     const text = (await promptAI(prompt)).response.text();
     const ideas: Idea[] = parseIdeas(text);
     console.log(text, ideas);
     setIdeas(ideas);
+    setIsGenerating(false);
     setRefresh(refresh + 1);
   };
 
@@ -46,9 +50,14 @@ export default function Dashboard() {
               placeholder="Enter your idea prompt..."
               className="flex-1"
             />
-            <Button type="submit">
-              <SendHorizontal className="h-4 w-4 mr-2" />
-              Generate
+            <Button type="submit" className="w-[117.5px] centered">
+              {isGenerating ? (
+                <BeatLoader size={6} color="#cacaca" />
+              ) : (
+                <>
+                  <SendHorizontal className="h-4 w-4 mr-2" /> Generate
+                </>
+              )}
             </Button>
           </div>
 
