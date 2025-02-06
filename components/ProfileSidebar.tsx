@@ -3,6 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/app/providers/AuthProvider";
 import { motion } from "framer-motion";
+import Link from "next/link";
+
+const navigationLinks = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/dashboard/ideas", label: "Saved Ideas" },
+];
 
 type ProfileSidebarProps = {
   toggleSidebar: () => void;
@@ -30,6 +36,14 @@ const ProfileSidebar = ({ toggleSidebar }: ProfileSidebarProps) => {
         <Button variant="ghost" onClick={toggleSidebar} className="p-4">
           <FontAwesomeIcon icon={faArrowRight} />
         </Button>
+      </div>
+
+      <div className="mt-8">
+        {navigationLinks.map((link) => (
+          <Link key={link.href} href={link.href} className="block p-2 text-lg">
+            {link.label}
+          </Link>
+        ))}
       </div>
 
       <div className="p-4">

@@ -12,7 +12,6 @@ import { User } from "firebase/auth";
 import { deleteDoc, doc } from "firebase/firestore";
 
 const handleSaveIdeaToFirestore = async (idea: Idea, user: User | null) => {
-  console.log("Saving idea to Firestore:", idea.text);
   if (!user) {
     throw new Error("User is not authenticated");
   }
@@ -23,7 +22,6 @@ const handleSaveIdeaToFirestore = async (idea: Idea, user: User | null) => {
     createdAt: new Date(),
     userId: user.uid,
   });
-  console.log("Document written with ID:", docRef.id);
 };
 
 const fetchIdeas = async (user: User | null | undefined): Promise<Idea[]> => {
@@ -59,7 +57,6 @@ const handleEditIdea = async (
   ideaText: string,
   ideaDescription: string
 ) => {
-  console.log(idea, user);
   if (!user) {
     throw new Error("User is not authenticated");
   }

@@ -4,6 +4,7 @@ import { User } from "firebase/auth";
 import { Button } from "@/components/ui/button";
 import { handleEditIdea, fetchIdeas } from "@/app/utils/firestore";
 import { BeatLoader } from "react-spinners";
+import { motion } from "motion/react";
 
 type EditIdeaProps = {
   idea: Idea;
@@ -27,8 +28,20 @@ const EditIdea = ({ idea, user, setEditing, setIdeas }: EditIdeaProps) => {
     setIdeas(ideas);
   };
 
+  const variants = {
+    open: { opacity: 1 },
+    closed: { opacity: 0 },
+  };
+
   return (
-    <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card p-6 rounded-lg shadow-lg z-50">
+    <motion.div
+      variants={variants}
+      initial="closed"
+      animate="open"
+      exit="closed"
+      transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
+      className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card p-6 rounded-lg shadow-lg z-50"
+    >
       <h2 className="text-lg font-bold">Edit Idea</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         Make changes to your idea here. Click save when you&apos;re done.
@@ -78,7 +91,7 @@ const EditIdea = ({ idea, user, setEditing, setIdeas }: EditIdeaProps) => {
           </Button>
         </div>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

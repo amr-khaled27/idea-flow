@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import EditIdea from "@/components/EditIdea";
+import { AnimatePresence, motion } from "motion/react";
 
 type SavedIdeaProps = {
   idea: Idea;
@@ -18,19 +19,33 @@ const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
 
+  const variants = {
+    open: { opacity: 1 },
+    closed: { opacity: 0 },
+  };
+
   return (
     <div className="mb-4 w-full p-4 flex justify-between border rounded-lg shadow-sm">
-      {editing && (
-        <>
-          <div className="fixed top-0 left-0 w-screen h-screen z-10 bg-black/50"></div>
-          <EditIdea
-            idea={idea}
-            user={user}
-            setEditing={setEditing}
-            setIdeas={setIdeas}
-          />
-        </>
-      )}
+      <AnimatePresence>
+        {editing && (
+          <>
+            <motion.div
+              variants={variants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              transition={{ duration: 0.3, type: "tween", ease: "easeInOut" }}
+              className="fixed top-0 left-0 w-screen h-screen z-10 bg-black/50"
+            ></motion.div>
+            <EditIdea
+              idea={idea}
+              user={user}
+              setEditing={setEditing}
+              setIdeas={setIdeas}
+            />
+          </>
+        )}
+      </AnimatePresence>
       <div>
         <h2 className="text-xl font-bold text-primary">{idea.text}</h2>
         <p className="mt-2">{idea.description}</p>

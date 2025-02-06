@@ -24,14 +24,18 @@ const IdeasPage: React.FC = () => {
       <NavHeader />
       <div className="p-4">
         <div className="mt-32">
-          {ideas.map((idea, index) => (
-            <SavedIdea
-              key={index}
-              idea={idea}
-              setIdeas={setIdeas}
-              user={user}
-            />
-          ))}
+          {ideas.length === 0 ? (
+            <p>No ideas were found</p>
+          ) : (
+            ideas.map((idea, index) => (
+              <SavedIdea
+                key={index}
+                idea={idea}
+                setIdeas={setIdeas}
+                user={user}
+              />
+            ))
+          )}
         </div>
       </div>
     </>
