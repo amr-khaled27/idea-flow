@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +15,7 @@ import { NavHeader } from "@/components/nav-header";
 import Link from "next/link";
 import { handleSignUpWithGoogle } from "@/app/utils/auth";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+import { useEffect } from "react";
 
 export default function SignIn() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -53,6 +53,15 @@ export default function SignIn() {
         alert(errorMessage);
       });
   };
+
+  useEffect(() => {
+    const auth = getAuth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = "/dashboard";
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">

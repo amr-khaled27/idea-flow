@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,8 +14,9 @@ import { useAuth } from "../providers/AuthProvider";
 import { User } from "firebase/auth";
 import MyAccordionItem from "@/components/MyAccordionItem";
 import { BeatLoader } from "react-spinners";
+import withAuth from "@/components/WithAuth";
 
-export default function Dashboard() {
+function Dashboard() {
   const [prompt, setPrompt] = useState("");
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [refresh, setRefresh] = useState<number>(0);
@@ -91,3 +91,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default withAuth(Dashboard);

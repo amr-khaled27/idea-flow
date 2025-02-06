@@ -16,6 +16,7 @@ import Link from "next/link";
 import { handleSignUpWithGoogle } from "@/app/utils/auth";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { updateProfile } from "firebase/auth";
+import { useEffect } from "react";
 
 export default function SignUp() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -69,6 +70,15 @@ export default function SignUp() {
         alert(errorMessage);
       });
   };
+
+  useEffect(() => {
+    const auth = getAuth();
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        window.location.href = "/dashboard";
+      }
+    });
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
