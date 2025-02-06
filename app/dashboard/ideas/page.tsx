@@ -4,6 +4,8 @@ import { NavHeader } from "@/components/nav-header";
 import { useAuth } from "@/app/providers/AuthProvider";
 import SavedIdea from "@/components/SavedIdea";
 import { MoonLoader } from "react-spinners";
+import { Idea } from "@/app/gemini";
+import { fetchIdeas } from "@/app/utils/firestore";
 
 const IdeasPage: React.FC = () => {
   const [ideas, setIdeas] = useState<any[]>([]);
@@ -14,6 +16,7 @@ const IdeasPage: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const ideas: Idea[] = await fetchIdeas(user);
       setIdeas(ideas);
       setLoading(false);
       setIdeas(ideas);
