@@ -1,4 +1,11 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+} from "firebase/firestore";
 import { db } from "../firebase";
 import { Idea } from "../gemini";
 import { User } from "firebase/auth";
@@ -46,4 +53,36 @@ const handleDeleteIdea = async (idea: Idea, user: User | null | undefined) => {
   await deleteDoc(ideaDocRef);
 };
 
-export { handleSaveIdeaToFirestore, fetchIdeas, handleDeleteIdea };
+const handleEditIdea = async (
+  idea: Idea,
+  user: User | null | undefined,
+  ideaText: string,
+  ideaDescription: string
+) => {
+  console.log(idea, user);
+  if (!user) {
+    throw new Error("User is not authenticated");
+  }
+  const ideasCollection = collection(db, "ideas");
+  const q = query(
+    ideasCollection,
+    where("userId", "==", user.uid),
+    where("id", "==", idea.id)
+  );
+  const ideasSnapshot = await getDocs(q);
+  if (ideasSnapshot.empty) {
+    throw new Error("Idea not found");
+  }
+  const ideaDocRef = doc(db, "ideas", ideasSnapshot.docs[0].id);
+  await updateDoc(ideaDocRef, {
+    text: ideaText,
+    description: ideaDescription,
+  });
+};
+
+export {
+  handleSaveIdeaToFirestore,
+  fetchIdeas,
+  handleDeleteIdea,
+  handleEditIdea,
+};
