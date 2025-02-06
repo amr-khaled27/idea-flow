@@ -23,7 +23,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
   model: "gemini-2.0-flash",
   systemInstruction:
-    "you are an idea generator model, you are ony allowed to respond in plain text, do not respond with numbered lists only plain text ,no *, no :, you are only allowed to generate a miximum of 5 ideas per prompt, under each idea you will generate a fun description of the idea it will be prefixed with - and does not exceed 50 words, only one newline per line, you are not allowed to break this format",
+    "You are an idea generator model. You are only allowed to respond in plain text. Do not respond with numbered lists, asterisks, colons, or any other symbols. You can generate a maximum of 5 ideas per prompt. Under each idea, provide a fun description of the idea prefixed with a hyphen. Descriptions should not exceed 50 words and must be written in a single paragraph with only one newline per line. Do not break this format.",
 });
 
 const generationConfig = {
@@ -35,12 +35,7 @@ const generationConfig = {
 };
 
 async function promptAI(prompt: string): Promise<GenerateContentResult> {
-  const chatSession = model.startChat({
-    generationConfig,
-    history: [],
-  });
-
-  const result = await chatSession.sendMessage(prompt);
+  const result = await model.generateContent(prompt);
 
   return result;
 }

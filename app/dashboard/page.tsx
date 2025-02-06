@@ -28,11 +28,28 @@ function Dashboard() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (prompt === "") {
+      return;
+    }
     setIsGenerating(true);
-    console.log("Generating ideas for prompt:", prompt);
+
     const text = (await promptAI(prompt)).response.text();
-    const ideas: Idea[] = parseIdeas(text);
-    console.log(text, ideas);
+    let ideas: Idea[] = parseIdeas(text);
+
+    const retryFetchIdeas = async (retryCount: number) => {
+      if (retryCount <= 0) return [];
+      const retryText = (await promptAI(prompt)).response.text();
+      let retryIdeas = parseIdeas(retryText);
+      if (retryIdeas.length === 0) {
+        retryIdeas = await retryFetchIdeas(retryCount - 1);
+      }
+      return retryIdeas;
+    };
+
+    if (ideas.length === 0) {
+      ideas = await retryFetchIdeas(3);
+    }
+
     setIdeas(ideas);
     setIsGenerating(false);
     setRefresh(refresh + 1);
