@@ -50,7 +50,7 @@ const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
         <h2 className="text-xl font-bold text-primary">{idea.text}</h2>
         <p className="mt-2">{idea.description}</p>
       </div>
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1">
         <Button
           onClick={async () => {
             setLoading(true);

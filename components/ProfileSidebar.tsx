@@ -46,15 +46,13 @@ const ProfileSidebar = ({ toggleSidebar }: ProfileSidebarProps) => {
         ))}
       </div>
 
-      <div className="p-4">
-        <Button
-          variant="outline"
-          onClick={() => auth?.signOut()}
-          className="w-full text-left"
-        >
-          Sign Out
-        </Button>
-      </div>
+      <Button
+        variant="destructive"
+        onClick={() => auth?.signOut()}
+        className="w-full text-left mt-4"
+      >
+        Sign Out
+      </Button>
     </motion.div>
   );
 };
