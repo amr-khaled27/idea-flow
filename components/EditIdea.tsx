@@ -26,6 +26,7 @@ const EditIdea = ({ idea, user, setEditing, setIdeas }: EditIdeaProps) => {
     const ideas: Idea[] = await fetchIdeas(user);
     setSaving(false);
     setIdeas(ideas);
+    setEditing(false);
   };
 
   const variants = {
