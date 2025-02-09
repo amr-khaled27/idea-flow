@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { NavHeader } from "@/components/nav-header";
 import { SendHorizontal } from "lucide-react";
-import { promptAI, parseIdeas } from "../gemini";
+import { parseIdeas } from "../gemini";
 import { Idea } from "../gemini";
 import { Accordion } from "@radix-ui/react-accordion";
 import "@/app/styles/accordion.css";
@@ -33,12 +33,36 @@ function Dashboard() {
     }
     setIsGenerating(true);
 
-    const text = (await promptAI(prompt)).response.text();
-    let ideas: Idea[] = parseIdeas(text);
+    const response = await fetch(
+      `/.netlify/functions/prompt?prompt=${prompt}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      setIsGenerating(false);
+      throw new Error("Failed to fetch ideas");
+    }
+
+    const data = await response.json();
+    let ideas: Idea[] = parseIdeas(data.aiResponse);
 
     const retryFetchIdeas = async (retryCount: number) => {
       if (retryCount <= 0) return [];
-      const retryText = (await promptAI(prompt)).response.text();
+      const response = await fetch(
+        `/.netlify/functions/prompt?prompt=${prompt}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const retryText = await response.json().then((data) => data.aiResponse);
       let retryIdeas = parseIdeas(retryText);
       if (retryIdeas.length === 0) {
         retryIdeas = await retryFetchIdeas(retryCount - 1);
