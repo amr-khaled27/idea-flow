@@ -4,6 +4,17 @@ export type Idea = {
   description: string;
 };
 
+export type Plan = {
+  actionSteps: string[];
+};
+
+function parsePlan(response: string): Plan {
+  const lines = response.split("\n").filter((line) => line.trim() !== "");
+  const actionSteps = lines.map((line) => line.trim());
+
+  return { actionSteps };
+}
+
 function parseIdeas(response: string): Idea[] {
   const ideas: Idea[] = [];
   const lines = response.split("\n").filter((line) => line.trim() !== "");
@@ -22,4 +33,4 @@ function parseIdeas(response: string): Idea[] {
   return ideas;
 }
 
-export { parseIdeas };
+export { parseIdeas, parsePlan };
