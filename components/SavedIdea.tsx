@@ -1,6 +1,10 @@
 "use client";
 import { Idea, parsePlan, Plan } from "@/app/gemini";
-import { handleDeleteIdea, fetchIdeas } from "@/app/utils/firestore";
+import {
+  handleDeleteIdea,
+  fetchIdeas,
+  handleSavePlan,
+} from "@/app/utils/firestore";
 import { User } from "firebase/auth";
 import { TrashIcon, PencilIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -60,20 +64,7 @@ const SavedIdea = ({ idea, user, setIdeas, savedPlan }: SavedIdeaProps) => {
       return;
     }
 
-    const ideasCollection = collection(db, "ideas");
-    const q = query(
-      ideasCollection,
-      where("userId", "==", user.uid),
-      where("id", "==", idea.id)
-    );
-    const ideasSnapshot = await getDocs(q);
-    if (ideasSnapshot.empty) {
-      throw new Error("Idea not found");
-    }
-    const ideaDoc = ideasSnapshot.docs[0];
-    await updateDoc(doc(db, "ideas", ideaDoc.id), {
-      plan: plan,
-    });
+    handleSavePlan(user, idea, plan);
 
     const updatedIdeas = await fetchIdeas(user);
     setIdeas(updatedIdeas);

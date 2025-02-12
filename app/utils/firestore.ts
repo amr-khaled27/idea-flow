@@ -7,7 +7,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../firebase";
-import { Idea } from "../gemini";
+import { Idea, Plan } from "../gemini";
 import { User } from "firebase/auth";
 import { deleteDoc, doc } from "firebase/firestore";
 
@@ -77,9 +77,33 @@ const handleEditIdea = async (
   });
 };
 
+const handleSavePlan = async (
+  user: User | null | undefined,
+  idea: Idea,
+  plan: Plan
+) => {
+  if (!user) return;
+
+  const ideasCollection = collection(db, "ideas");
+  const q = query(
+    ideasCollection,
+    where("userId", "==", user.uid),
+    where("id", "==", idea.id)
+  );
+  const ideasSnapshot = await getDocs(q);
+  if (ideasSnapshot.empty) {
+    throw new Error("Idea not found");
+  }
+  const ideaDoc = ideasSnapshot.docs[0];
+  await updateDoc(doc(db, "ideas", ideaDoc.id), {
+    plan: plan,
+  });
+};
+
 export {
   handleSaveIdeaToFirestore,
   fetchIdeas,
   handleDeleteIdea,
   handleEditIdea,
+  handleSavePlan,
 };

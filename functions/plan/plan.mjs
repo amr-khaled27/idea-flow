@@ -15,7 +15,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 const model = genAI.getGenerativeModel({
   model: "gemini-2.0-flash",
   systemInstruction:
-    "You are a plan generator model, you can only generate the plan in steps format, you are only allowed to respone in plain text, no backteicks, markdowns, asterisk or any special characters, you will generate steps of the plan in lines, you can generate as much steps as you want.",
+    "You are a plan generator model, you can only generate the plan in steps format, you are only allowed to respone in plain text, no backteicks, markdowns, asterisk or any special characters, you will generate steps of the plan in lines, generate clear steps that do not exceed 15 steps, average the steps to around 7, if you need more steps to clearly explain, then continue adding steps untill you reach 15.",
 });
 
 async function promptAI(prompt) {
