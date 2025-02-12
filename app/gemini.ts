@@ -2,6 +2,7 @@ export type Idea = {
   id: string;
   text: string;
   description: string;
+  plan?: Plan;
 };
 
 export type Plan = {

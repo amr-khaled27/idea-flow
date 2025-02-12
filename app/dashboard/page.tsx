@@ -13,7 +13,7 @@ import { handleSaveIdeaToFirestore } from "../utils/firestore";
 import { useAuth } from "../providers/AuthProvider";
 import { User } from "firebase/auth";
 import MyAccordionItem from "@/components/MyAccordionItem";
-import { BeatLoader } from "react-spinners";
+import { BeatLoader, RingLoader } from "react-spinners";
 import withAuth from "@/components/WithAuth";
 
 function Dashboard() {
@@ -91,7 +91,10 @@ function Dashboard() {
               placeholder="Enter your idea prompt..."
               className="flex-1"
             />
-            <Button type="submit" className="w-[117.5px] centered">
+            <Button
+              type="submit"
+              className="w-[117.5px] centered active:scale-95"
+            >
               {isGenerating ? (
                 <BeatLoader size={6} color="#cacaca" />
               ) : (
@@ -104,7 +107,9 @@ function Dashboard() {
 
           <Card>
             <CardContent className="p-6 min-h-[400px] flex items-center justify-center text-muted-foreground">
-              {ideas.length === 0 ? (
+              {isGenerating ? (
+                <RingLoader size={125} color="#cacaca" />
+              ) : ideas.length === 0 ? (
                 "Your generated ideas will appear here"
               ) : (
                 <Accordion

@@ -8,21 +8,32 @@ import { useState } from "react";
 import { BeatLoader } from "react-spinners";
 import EditIdea from "@/components/EditIdea";
 import { AnimatePresence, motion } from "motion/react";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { db } from "@/app/firebase";
 
 type SavedIdeaProps = {
   idea: Idea;
   user: User | null | undefined;
   setIdeas: React.Dispatch<React.SetStateAction<Idea[]>>;
+  savedPlan?: Plan | null;
 };
 
-const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
+const SavedIdea = ({ idea, user, setIdeas, savedPlan }: SavedIdeaProps) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
-  const [plan, setPlan] = useState<Plan | null>(null);
+  const [generatingPlan, setGeneratingPlan] = useState<boolean>(false);
 
   const handleTurnIntoPlan = async (idea: Idea) => {
+    setGeneratingPlan(true);
     const fetchPlan = async (retryCount: number): Promise<Plan> => {
-      console.log("fetching plan");
       if (retryCount <= 0) return { actionSteps: [] };
       const response = await fetch(
         `/.netlify/functions/plan?prompt=${idea.text}`,
@@ -38,12 +49,34 @@ const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
       if (plan.actionSteps.length === 0) {
         return fetchPlan(retryCount - 1);
       }
+
+      setGeneratingPlan(false);
       return plan;
     };
 
     const plan = await fetchPlan(3);
 
-    setPlan(plan);
+    if (!user) {
+      return;
+    }
+
+    const ideasCollection = collection(db, "ideas");
+    const q = query(
+      ideasCollection,
+      where("userId", "==", user.uid),
+      where("id", "==", idea.id)
+    );
+    const ideasSnapshot = await getDocs(q);
+    if (ideasSnapshot.empty) {
+      throw new Error("Idea not found");
+    }
+    const ideaDoc = ideasSnapshot.docs[0];
+    await updateDoc(doc(db, "ideas", ideaDoc.id), {
+      plan: plan,
+    });
+
+    const updatedIdeas = await fetchIdeas(user);
+    setIdeas(updatedIdeas);
   };
 
   const variants = {
@@ -77,18 +110,25 @@ const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
         <h2 className="text-xl font-bold text-primary">{idea.text}</h2>
         <p className="mt-2">{idea.description}</p>
 
-        <Button className="mt-4" onClick={() => handleTurnIntoPlan(idea)}>
-          Turn Into Plan
+        <Button
+          className="mt-4 w-[124px] active:scale-95"
+          onClick={() => handleTurnIntoPlan(idea)}
+        >
+          {generatingPlan ? (
+            <BeatLoader size={4} color="#cacaca" />
+          ) : (
+            "Turn Into Plan"
+          )}
         </Button>
 
         <div>
-          {plan && (
+          {!generatingPlan && idea.plan && (
             <div>
               <h3 className="text-lg font-bold text-primary mt-4">
                 Suggested Plan
               </h3>
               <ul>
-                {plan.actionSteps.map((step, index) => (
+                {idea.plan?.actionSteps.map((step, index) => (
                   <li key={index}>{step}</li>
                 ))}
               </ul>
@@ -96,6 +136,7 @@ const SavedIdea = ({ idea, user, setIdeas }: SavedIdeaProps) => {
           )}
         </div>
       </div>
+
       <div className="flex flex-col gap-1">
         <Button
           onClick={async () => {
