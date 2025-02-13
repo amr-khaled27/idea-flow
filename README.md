@@ -2,7 +2,7 @@
 
 Idea Spark is a web application designed to help users generate creative ideas and transform them into actionable plans. It leverages the power of Google's Gemini for idea generation and provides tools for organizing thoughts, defining tasks, and tracking progress. Built with Next.js and Firebase.
 
-## Demo
+## Deployment
 https://idea-flow-project.netlify.app/
 
 ## Features
@@ -34,8 +34,7 @@ These instructions will get you a copy of the project up and running on your loc
 - Clone the repository:
 
 ```bash
-Copy
-git clone 
+git clone https://github.com/amr-khaled27/idea-flow.git
 cd idea-flow
 ```
 - Install dependencies:
@@ -45,15 +44,15 @@ npm install  # or yarn install
 ```
 - Configure Firebase:
 
-- - Create a Firebase project in the Firebase Console.
+-- Create a Firebase project in the Firebase Console.
 
-- - Enable Authentication and Firestore.
+-- Enable Authentication and Firestore.
 
-- - Obtain your Firebase configuration object from the Firebase Console (Project settings -> General -> Your apps -> Firebase SDK snippet).
+-- Obtain your Firebase configuration object from the Firebase Console (Project settings -> General -> Your apps -> Firebase SDK snippet).
 
-- - Create a .env.local file in the root of your project.
+-- Create a .env.local file in the root of your project.
 
-- Add your Firebase configuration to .env.local:
+-- Add your Firebase configuration to .env.local:
 
 ```bash
 NEXT_PUBLIC_FIREBASE_API_KEY=[your-api-key]
@@ -64,9 +63,9 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=[your-messaging-sender-id]
 NEXT_PUBLIC_FIREBASE_APP_ID=[your-app-id]
 ```
 - Configure Gemini API:
-- - Obtain a Gemini API key from the Google Cloud Console.
+-- Obtain a Gemini API key from the Google Cloud Console.
 
-- - Add your Gemini API key to .env.local:
+-- Add your Gemini API key to .env.local:
 
 ```bash
 GEMINI_API_KEY=[your-gemini-api-key]
