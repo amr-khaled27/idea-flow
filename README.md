@@ -10,8 +10,7 @@ https://idea-flow-project.netlify.app/
 - Idea Generation: Generate fresh ideas using Google's Gemini API based on custom prompts or categories.
 - Save for Later: Save generated ideas to your account for future reference and development.
 - Plan Creation: Transform saved ideas into structured plans with actionable steps, deadlines, and priorities.
-- Task Management: Add, edit, delete, and reorder tasks within your plans.
-
+- Light and Dark themes: to improve accessability.
   
 ## Tech Stack
 - Frontend: Next.js (React framework)
