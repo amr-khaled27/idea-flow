@@ -1,6 +1,6 @@
 ## Idea Flow - Generate, Plan, and Execute
 
-Idea Spark is a web application designed to help users generate creative ideas and transform them into actionable plans. It leverages the power of Google's Gemini for idea generation and provides tools for organizing thoughts, defining tasks, and tracking progress. Built with Next.js and Firebase.
+Idea Flow is a web application designed to help users generate creative ideas and transform them into actionable plans. It leverages the power of Google's Gemini for idea generation and provides tools for organizing thoughts, defining tasks, and tracking progress. Built with Next.js and Firebase.
 
 ## Deployment
 https://idea-flow-project.netlify.app/
